@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+	<title>Vue Testing</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+	<style type="text/css">
+		.custom-btn {
+			width: 120px;
+			height: 60px;
+			background-color: gold;
+			/*background: linear-gradient(to left top,red,yellow,blue);*/
+			color: #fff;
+			border: 0;
+			border-radius: 8px;
+			transition: all .5s;
+			outline: none;
+			box-shadow: 2px 2px 8px 1px rgba(0,0,0,.3);
+			margin-top: 15px;
+			margin-right: 15px;
+		}
+
+		.custom-btn:hover {
+			background-color: #cbac05;
+		}
+
+		.fade-enter-active, .fade-leave-active {
+			transition: all .5s;
+		}
+
+		.fade-enter, .fade-leave-to {
+			opacity: 0;
+			transform: translateX(5px);
+		}
+
+	</style>
+</head>
+<body>
+	<div id="app">
+		<h1>Testing</h1>
+		<input type="text" v-model:value="inputValue" />
+		<button type="button" @click="handleEvent">提交</button><br/>
+
+		<custom-button v-for="post in posts" :key="post.id" :post="post"></custom-button>
+
+		<div id="demo">
+		  	<button v-on:click="show = !show">
+		    	Toggle
+		  	</button>
+		  	<transition name="fade">
+				<p v-if="show">hello</p>
+		  	</transition>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+
+		Vue.component("custom-button",{
+			data() {
+				return {
+					count: 0,
+				}
+			},
+			props: ['post'],
+			template: "<button class='custom-btn' @click='count++'>{{ post.title }}{{ count }}</button>",
+		})
+
+		let vm = new Vue({
+			el: "#app",
+			data: {
+				inputValue: '',
+				posts: [
+			    	{ id: 1, title: 'My journey with Vue' },
+			    	{ id: 2, title: 'Blogging with Vue' },
+			    	{ id: 3, title: 'Why Vue is so fun' }
+			    ],
+			    show: true,
+			},
+			methods: {
+				handleEvent() {
+					if(!this.inputValue.includes("<")) {
+						this.inputValue = "< " + this.inputValue.trim().toUpperCase();
+					}
+
+					if(!this.inputValue.includes(">")) {
+						this.inputValue = this.inputValue.trim().toUpperCase() + " >";
+					}
+				}
+			},
+			computed: {
+			},
+			watch: {
+				'inputValue' : function(old, newval) {
+					console.log(old + "==" + newval);
+				}
+			}
+		})
+
+	</script>
+</body>
+</html>
